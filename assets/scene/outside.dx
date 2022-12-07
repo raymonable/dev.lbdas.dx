@@ -1,0 +1,46 @@
+& show_bg SCHOOL_OUTSIDE
+
+& wait 250
+
+& show_char LEN all 250
+& wait 500
+& show_msg_box
+> LEN:hey nerd
+> YN:Oh fuck, not you..
+> LEN:hey nrd lets go...
+& show_char LEN_SHADES
+> LEN:burn down skule
+> YN:What? Why!?
+& show_char LEN
+> LEN:becuze i said so..
+> LEN:i got hte gasoline right here bitch
+> YN:Len no
+> LEN:len ye
+> YN%thought:(If I don't stop Len, he'll burn down the school...)
+> YN%thought:(What should I say to stop him..?)
+$ LENO_NO Leno no! Dont do it!
+$ WHY Why are you doing this, Len?! Please stop!
+# LENO_NO
+> LEN:did u just call me fuking leno?
+> LEN:also fuk u leno gonn do it
+$ CANT I can't let you do this.
+$ WHATEVER Ugh, whatever.
+
+# CANT
+& play_sound assets/sfx/hit_floor.mp3
+& fade_char LEN 50
+& wait 1000
+> YN%action:kick Len in the crotch, leaving him whimpering on the sidewalk.
+& load_scene police.dx
+
+# WHATEVER
+> LEN:ok nerd lets light this place up
+> YN%thought:(I suppose I should follow him just in case.)
+& load_scene school.dx
+
+# WHY
+> LEN:y? cause im bord lol
+> LEN:cant stop the len train
+> LEN:ok nerd lets light this place up
+> YN%thought:(I suppose I should follow him just in case.)
+& load_scene school.dx

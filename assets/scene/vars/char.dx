@@ -1,0 +1,55 @@
+// LEN(s)
+;new character LEN
+;displayname Len
+;position left
+;image assets/character/len_default.png
+;textbox_color #d6cc7e
+
+;new character LEN_SHADES
+;position left
+;image assets/character/the_cooler_len.png
+
+;new character LEN_BLUSHIE
+;position left
+;image assets/character/len_blushie.png
+
+// RIN (settings)
+;new character RIN
+;displayname Rin
+;position center
+;image assets/character/rin_default.png
+;textbox_color #f59342
+
+// KAITO
+;new character KAITO
+;displayname KAITO
+;position center
+;image assets/character/kaito_shades.png
+;textbox_color #4127e8
+
+// MIKU
+;new character MIKU
+;displayname Miku
+;position right
+;image assets/character/miku_default.png
+;textbox_color #7ea6d6
+
+// YOU
+;new character YN
+;displayname You
+;textbox_color #afafaf
+
+// BACKGROUNDS
+;new background SCHOOL_OUTSIDE
+;image assets/bg/schooloutside.png
+
+;new background HALLWAY
+;image assets/bg/hallway.png
+
+;new background CLASSROOM
+;image assets/bg/classroom.png
+
+;new background LOCKERS
+;image assets/bg/lockers.png
+
+& load_scene vars/ending.dx

@@ -1,0 +1,37 @@
+& show_bg
+& show_char KAITO all 250
+
+> KAITO:so
+> KAITO:why did u do it
+> YN:.. Do what?
+> KAITO:WHY DID YOU KILL LEN.
+> YN:Oh!
+> YN:Oh.
+> YN:Erm..
+> YN:He was threatening to, well...
+> KAITO: yes...??
+> YN%thought:Shit. Should I lie..?
+$ LIE Lie
+$ NOLIE Don't lie.
+
+# LIE
+> YN:He was threatening to send a pipebomb to every resident in Japan.
+> YN%thought:Shit! That sounds so fake...
+> KAITO:sounds liek him
+> KAITO:whatever go have fun
+> KAITO:you're free
+> YN:Thanks.
+& award_ending LIAR
+
+# NOLIE
+> YN:He was threatening to burn down the school.
+> KAITO:seriously??
+> KAITO:len wuldnt do that
+> KAITO:dumb fucking liar
+> KAITO:come with me
+> YN:But.. but I'm telling the truth!!
+> KAITO:you can hear it from the juge
+> YN:Goddamnit.
+& fade_char KAITO 750
+> YN%action:follow KAITO into the court room.
+& award_ending LOSER

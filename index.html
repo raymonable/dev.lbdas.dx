@@ -1,0 +1,500 @@
+<html>
+    <head>
+        <title>Len Burns Down A School DX</title>
+        <style>
+            body {
+                background: black;
+            }
+
+            * {
+                font-family: Arial;
+                user-select: none;
+            }
+
+            @keyframes open {
+                0% {
+                    opacity: 0;
+                }
+                25% {
+                    opacity: 0;
+                }
+                100% {
+                    opacity: 1;
+                }
+            }
+
+            @keyframes textbox-open {
+                0% {
+                    transform: translate(-50%, 100%);
+                }
+                100% {
+                    transform: translate(-50%, -100%);
+                }
+            }
+
+            @keyframes textbox-close {
+                0% {
+                    transform: translate(-50%, -100%);
+                }
+                100% {
+                    transform: translate(-50%, 100%);
+                }
+            }
+
+            canvas {
+                width: 100%;
+                height: 100%;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 0;
+                border: none;
+                image-rendering: pixelated;
+                animation: 1s open;
+            }
+            .textbox {
+                aspect-ratio: 2 / 0.35;
+                width: calc(45% - 40px);
+                position: fixed;
+                height: auto;
+                position: fixed;
+                transform: translate(-50%, 100%);
+                top: calc(100% - 25px);
+                left: 50%;
+                z-index: 10;
+                background: rgba(255, 255, 255, 0.75);
+                border-radius: 0 8px 8px 8px;
+                padding: 1vw;
+                font-size: 1.45vw;
+                transition: 0.5s transform;
+            }
+            .textbox.textbox-closed {
+                transform: translate(-50%, 100%);
+            }
+            .textbox.textbox-open {
+                transform: translate(-50%, -100%);
+            }
+            .textbox-name {
+                width: 50%;
+                height: 25%;
+                transform: translate(0, -95%);
+                position: absolute;
+                top: 0;
+                left: 0;
+                border-radius: 8px 0 0 0;
+                color: white;
+                font-size: 1.25vw;
+                padding-left: 15px;
+                display: flex;
+                align-items: center;
+            }
+            .buttons {
+                width: 35%;
+                min-height: 0;
+                position: fixed;
+                top: 15%;
+                left: calc(100% - 15%);
+                transform: translate(-100%, 0);
+                z-index: 15;
+            }
+            .buttons button {
+                width: 100%;
+                text-align: center;
+                height: 50px;
+                font-size: 24px;
+                border: none;
+                border-radius: 8px;
+                margin-bottom: 10px;
+                background: linear-gradient(180deg, rgba(196,128,128,1) 0%, rgba(158,82,82,1) 100%);
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas></canvas>
+        <div class="textbox">
+            <div class="textbox-name">
+                ???
+            </div>
+            <span>
+
+            </span>
+        </div>
+        <div class="buttons">
+
+        </div>
+        <script>
+            const console_msg = `Hello!!
+Please know that viewing the console or looking through files may increase your chance of spoiling the game.
+It\'s HIGHLY recommended to find all endings before looking through here.
+Anyway, have fun.
+
+Oh, also,
+Don\'t tell anyone, but I plan on doing a rewrite of the game entirely.
+- Raymond`.split('\n')
+            console_msg.forEach((_) => {console.log(_)})
+
+            var index = 0;
+            var _index = 0;
+
+            var onscreen_text;
+            var awaiting_threads = [];
+
+            var characters = {};
+            var backgrounds = {};
+            var buttons = [];
+            var endings = {};
+            var active_definer;
+            var int;
+            var ignore_pause = false;
+            
+            var textbox = document.querySelector('.textbox')
+            var text_container = document.querySelector('span');
+            var name_container = document.querySelector('.textbox-name')
+            var onscreen_characters = {}
+
+            const vn_canvas = document.querySelector('canvas');
+            const vn_context = vn_canvas.getContext('2d');
+            vn_context.imageSmoothingEnabled = false
+
+            var bg
+
+            setInterval(() => {
+                vn_canvas.width = window.innerWidth;
+                vn_canvas.height = window.innerHeight;
+                // background
+                if (!!bg) {
+                    var width = vn_canvas.width;
+                    var height = (vn_canvas.width / bg.width) * bg.height;
+                    if (vn_canvas.height > height + 5) {
+                        width = (vn_canvas.height / bg.height) * bg.width;
+                        height = vn_canvas.height;
+                    }
+                    vn_context.drawImage(bg, (vn_canvas.width / 2) - (width / 2), vn_canvas.height - height, width, height)
+                }
+                // draw characters
+                Object.keys(characters).forEach((__character) => {
+                    var ___character = characters[__character];
+                    if (Object.keys(onscreen_characters).includes(__character)) {
+                        if (!!___character.image) {
+                            var character = ___character.image
+                            var character_max_height = vn_canvas.height * 0.875
+                            var width = (character_max_height / character.height) * character.width;
+                            var height = character_max_height;
+                            if ((vn_canvas.width / 2) < width) {
+                                width = vn_canvas.width / 2;
+                                height = (vn_canvas.width / character.width) * character.height / 2;
+                            }
+                            vn_context.save();
+                            var x_position = 0;
+                            switch (___character.position || 'left') {
+                                case 'right':
+                                    vn_context.translate(vn_canvas.width, 0);
+                                    vn_context.scale(-1, 1)
+                                    //x_position = vn_canvas.width - width;
+                                    break;
+                                case 'center':
+                                    x_position = (vn_canvas.width / 2) - (width / 2);
+                                    break;
+                            }
+                            ___character = onscreen_characters[__character];
+                            vn_context.globalAlpha = ___character.fade || 1;
+                            if (___character.fade != null) {
+                                if (___character.fadeSpeed < 0) {
+                                    ___character.fade -= -((1000 - Math.abs(___character.fadeSpeed)) / 100000);
+                                    if (___character.fade >= 1) {
+                                        // kil them
+                                        onscreen_characters[__character].fade = null;
+                                    }
+                                } else {
+                                    ___character.fade -= ((1000 - ___character.fadeSpeed) / 100000);
+                                    if (___character.fade <= 0) {
+                                        // kil them
+                                        delete onscreen_characters[__character]
+                                    }
+                                }
+                            }
+                            vn_context.drawImage(character, x_position, vn_canvas.height - height, width, height);
+                            vn_context.restore()
+                        }
+                    }
+                })
+            });
+
+            document.oncontextmenu = (e) => {
+                e.preventDefault()
+            }
+
+            function load_scene_url(url) {
+                fetch(`/assets/scene/${url}`).then((response) => response.text()).then(load_scene)
+            }
+
+            function start() {
+                if (localStorage['settings_configured'] != null) {
+                    load_scene_url('outside.dx')
+                } else {
+                    localStorage['settings_configured'] = true
+                    load_scene_url('settings.dx')
+                }
+            }
+
+            function load_scene(_script) {
+                awaiting_threads = [];
+                //console.log('SCENE START!!!')
+                const script = _script.split(/\r?\n/)
+                if (!!int) {
+                    clearInterval(int);
+                }
+                var jumps = {}
+                for (var i = 0; i < script.length; i++) {
+                    if (script[i].substring(0, 1) == "#") {
+                        jumps[script[i].substring(2)] = i;
+                    }
+                }
+                [_index, index] = [-1, 0];
+                int = setInterval(() => {
+                    if (index != _index) {
+                        _index = index;
+                        var line = script[index];
+                        if (line != null) {
+                            var header = line.substring(0, 1);
+                            var payload = line.substring(1);
+                            switch (header) {
+                                case ";":
+                                    // Defining something..
+                                    payload = payload.split(' ')
+                                    switch (payload[0]) {
+                                        case "new":
+                                            if (payload[1] == "character") {
+                                                characters[payload[2]] = {}
+                                                active_definer = [characters, payload[2]]
+                                            } else if (payload[1] == "background") {
+                                                backgrounds[payload[2]] = {}
+                                                active_definer = [backgrounds, payload[2]]
+                                            } else if (payload[1] == "ending") {
+                                                endings[payload[2]] = {}
+                                                active_definer = [endings, payload[2]]
+                                            }
+                                            break;
+                                        case "select":
+                                            if (payload[1] == "character") {
+                                                active_definer = [characters, payload[2]]
+                                            } else if (payload[1] == "background") {
+                                                active_definer = [backgrounds, payload[2]]
+                                            } else if (payload[1] == "ending") {
+                                                active_definer = [endings, payload[2]]
+                                            }
+                                            break;
+                                        // ENDING
+                                        case "ending":
+                                            let combined = payload
+                                            delete combined[0]
+                                            active_definer[0][active_definer[1]].ending = combined.join(' ').substring(1)
+                                            break;
+                                        // CHARACTER
+                                        case "image":
+                                            active_definer[0][active_definer[1]][payload[0]] = (function() {
+                                                var _ = new Image();
+                                                _.src = payload[1];
+                                                return _;
+                                            })()
+                                            break;
+                                        default:
+                                            active_definer[0][active_definer[1]][payload[0]] = payload[1]
+                                            break;
+                                    }
+                                    index += 1
+                                    break
+                                case ">":
+                                    // A character is speaking.
+                                    var character = payload.substring(1).split(':')[0];
+                                    onscreen_text = "";
+                                    var char_name = characters[(character.split('%')[0])].displayname
+                                    var addons = ""
+                                    name_container.innerText = char_name
+                                    name_container.style = `background: linear-gradient(to right, ${characters[(character.split('%')[0])].textbox_color || '#000000'}, ${characters[(character.split('%')[0])].textbox_color || '#000000'}, transparent); `;
+                                    text_container.style = null;
+                                    if (!!character.split('%')[1]) {
+                                        switch (character.split('%')[1]) {
+                                            case "thought":
+                                                text_container.style = "font-style: italic;"
+                                                //addons = "(Thought) " + addons
+                                                break;
+                                            case "action":
+                                                addons = char_name+" ";
+                                                break;
+                                        }
+                                        //character = character.split('%')[0]
+                                    }
+                                    function advance() {
+                                        if (onscreen_text != payload.substring(character.length + 2)) {
+                                            onscreen_text = onscreen_text + ((payload.substring(character.length + 2)).substring(onscreen_text_index, onscreen_text_index+1))
+                                            text_container.innerText = addons + onscreen_text
+                                        } else {
+                                            clearInterval(int);
+                                            if (!ignore_pause) {
+                                                inject_pause();
+                                            } else {
+                                                index += 1;
+                                                ignore_pause = false;
+                                            }
+                                            /*index++*/
+                                        }
+                                        onscreen_text_index += 1;
+                                    }
+                                    var onscreen_text_index = 0;
+                                    var int = setInterval(() => {
+                                        advance()
+                                    }, 35);
+                                    advance();
+                                    break;
+                                case "&":
+                                    // Execute instruction.
+                                    payload = payload.substring(1) // remove space
+                                    payload = payload.split(' ')
+                                    switch (payload[0]) {
+                                        case "pause":
+                                            if (!ignore_pause) {
+                                                inject_pause();
+                                            } else {
+                                                index += 1;
+                                                ignore_pause = false;
+                                            }
+                                            break;
+                                        case "show_char":
+                                            if (payload[2] == "append") {
+                                                onscreen_characters[payload[1]] = {active: true}
+                                            } else {
+                                                onscreen_characters = {[payload[1]]: {active: true}}
+                                            }
+                                            if (!!payload[3]) {
+                                                onscreen_characters[payload[1]].fadeSpeed = -parseInt(payload[3]);
+                                                onscreen_characters[payload[1]].fade = 0;
+                                            }
+                                            index += 1;
+                                            break;
+                                        case "fade_char":
+                                            onscreen_characters[payload[1]].fadeSpeed = parseInt(payload[2]);
+                                            onscreen_characters[payload[1]].fade = 1;
+                                            index += 1;
+                                            break;
+                                        case "wait":
+                                            setTimeout(() => {
+                                                index += 1
+                                            }, parseInt(payload[1]));
+                                            break;
+                                        case "show_msg_box":
+                                            textbox.classList = 'textbox textbox-open';
+                                            index += 1
+                                            break;
+                                        case "hide_msg_box":
+                                            textbox.classList = 'textbox textbox-close';
+                                            index += 1
+                                            break;
+                                        case "show_bg":
+                                            bg = payload[1] ? backgrounds[payload[1]].image : null
+                                            index += 1
+                                            break;
+                                        case "load_scene":
+                                            load_scene_url(payload[1]);
+                                            break;
+                                        case "ignore_next_pause":
+                                            ignore_pause = true
+                                            index += 1
+                                            break;
+                                        case "play_sound":
+                                            var sfx = new Audio(payload[1]);
+                                            sfx.oncanplaythrough = () => {
+                                                sfx.play();
+                                                index += 1;
+                                            }
+                                            break;
+                                        case "game_initted":
+                                            start()
+                                            break;
+                                        case "award_ending":
+                                            alert('no ending system has been added yet so just use this lol')
+                                            alert('you got the '+payload[1]+' ending!!!')
+                                            alert(endings[payload[1]].ending)
+                                            start()
+                                            break;
+                                    }
+                                    break;
+                                case "$":
+                                    // Create a button option
+                                    payload = payload.substring(1)
+                                    var btn_id = payload.split(' ')[0];
+                                    var btn_text = payload.substring(btn_id.length + 1);
+                                    var button = document.createElement('button');
+                                    document.querySelector('.buttons').appendChild(button)
+                                    button.innerText = btn_text
+                                    button.addEventListener('click', () => {
+                                        index = jumps[btn_id];
+                                        buttons.forEach((button) => {
+                                            button.remove();
+                                        })
+                                    })
+                                    buttons.push(button);
+                                    if (script[index + 1] != null) {
+                                        if (script[index + 1].substring(0, 1) == "$") {
+                                            index += 1;
+                                        }
+                                    }
+                                    break;
+                                default:
+                                    // Invalid instruction. Let's just keep going for now.
+                                    index += 1;
+                                    break;
+                            }
+                        }
+                    }
+                }, 1);
+            }
+
+            const input_executed = function(input_type, e) {
+                for (var i = 0; i < awaiting_threads.length; i++) {
+                    var thread = awaiting_threads[i];
+                    if (thread.input.includes(input_type)) {
+                        const _i = i;
+                        thread.method(input_type, e, () => {
+                            awaiting_threads.splice(_i, 1);
+                            index = index + 1;
+                        });
+                    }
+                }
+            }
+            var inject_pause = () => {
+                awaiting_threads.push({
+                    method: function(input_type, event, end_thread) {
+                        if (input_type == "oninputup") {
+                            if (event.key == "Enter" || event.key == " ") {
+                                end_thread()
+                            }
+                        } else {
+                            end_thread()
+                        }
+                        
+                    },
+                    input: ['onclick', 'oninputup']
+                })
+            }
+            document.addEventListener('click', (e) => {
+                input_executed('onclick', e);
+            })
+            document.addEventListener('keydown', (e) => {
+                input_executed('oninputdown', e)
+            })
+            document.addEventListener('keyup', (e) => {
+                input_executed('oninputup', e)
+            })
+
+            if (window.innerWidth < window.innerHeight) {
+                alert('LBDASDX currently doesn\'t work well on devices in this aspect ratio.')
+                alert('Please rotate your device sideways to enjoy.')
+            }
+
+            load_scene_url('vars/char.dx')
+        </script>
+    </body>
+</html>

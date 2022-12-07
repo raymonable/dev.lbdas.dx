@@ -1,0 +1,39 @@
+& show_bg
+& wait 1500
+
+& show_char RIN all 250
+& wait 2000
+
+& show_msg_box
+> RIN:hiya
+> RIN:i just have a little something to tell ya
+> RIN:this game is in development!!
+> RIN:most assets aren't final.
+> RIN:besides that, if you find any bugs, please report it to the discord server.
+> RIN:thank u :3
+& ignore_next_pause
+> RIN:now, please enj-
+> LEN:RIN!!!!!!
+> LEN:I FOUND A BLUE JEWLRY BOX
+> LEN:CUM HERE 
+> RIN:...
+& fade_char RIN 250
+& hide_msg_box
+& wait 1500
+& show_msg_box
+> RIN:len...
+> LEN:lets opn it up n see
+> RIN:LEN
+> LEN:wht
+> RIN:THATS GAKUPO'S DENTAL BOX.
+> LEN:oh
+& hide_msg_box
+& wait 1500
+
+// TEMPORARY
+& show_msg_box
+> YN:pretend like there's a title screen..
+& hide_msg_box
+& wait 2500
+
+& load_scene outside.dx

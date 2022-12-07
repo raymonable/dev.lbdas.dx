@@ -1,0 +1,12 @@
+
+& wait 1000
+& show_char RIN all 250
+
+& show_msg_box
+> RIN:hi again..
+> RIN:it's mee!!!
+> RIN:this is the end of the dev build for Len Burns Down A School DX.
+> RIN:please leave suggestions or issues on the discord server.
+> RIN:THANXX!!!!!!
+> RIN:https://discord.gg/5A5hRjWaKG
+& end

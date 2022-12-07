@@ -1,0 +1,98 @@
+& show_bg
+
+> YN%thought:(Note, there's no background for the other image of the school exterior.)
+> YN%thought:(This will be fixed before the first release build)
+
+> LEN:ok we start here
+> LEN:fuck this place in particular
+> LEN%action:starts pouring large amounts of gasoline in one spot
+> YN:Lenkunchansama, is it really a good idea to put all that gasoline there?
+> LEN:no
+> LEN:but how dare you question me
+> LEN:fuk u
+> LEN:ok we're goin in get ur gear rdy
+
+& show_bg LOCKERS
+& wait 1000
+
+> LEN%action:pours gasoline through all the locker's air holes
+> LEN:fuk this locker
+> LEN:and this loker
+> LEN:and this loker
+> LEN:and this loker
+> LEN:and this loker
+> LEN:and this loker 
+> LEN:ok nerd let's go
+
+& show_bg HALLWAY
+& wait 1000
+
+> LEN:ok im gonna do a sick skid down the hall w the gasoline cap off
+> LEN:watch me
+> LEN:lets get this done
+$ NOSKID Len, don't!
+$ WATCH Let's see it!
+
+# NOSKID
+> YN:Len, don't do it!
+> LEN:y not
+> YN:It's not safe..
+> LEN:why do u care
+> YN:Len...
+> YN:I love you...
+> LEN:what
+> LEN:ecuse me
+> YN:It's the truth..
+> YN:Ever since second grade I've always loved you..
+> LEN:...
+> LEN:i
+& show_char LEN_BLUSHIE
+> LEN:i love u too y/n
+> YN:Oh my...
+> YN:How about we get out of here?
+> LEN:sure
+& fade_char LEN_BLUSHIE 250
+& wait 1000
+& award_ending DATE
+
+# WATCH
+& fade_char LEN 250
+> LEN%action:suddenly took off, sprinting down the hall with the determination of a gazelle, who is also a virtual idol.
+> LEN:o fuk
+& play_sound assets/sfx/hit_floor.mp3
+> LEN%action:falls, halfway down the hall
+& show_char LEN all 250
+> LEN:ow fuk
+> LEN:i guess we all cant be perfct
+> LEN:wich is bulshit becuz im len and len is perfct
+> LEN:whatever lets go to the next palce
+& hide_msg_box
+
+& show_bg CLASSROOM
+& wait 1000
+
+& show_msg_box
+> LEN:fuk this room
+> LEN:especially kevin robinsons desk
+> LEN:fuk u kevin stop showing everyone my fukin deviantart page
+> YN:Are we done here?
+> LEN:yea no need to be a bitch
+> LEN:bitch
+& hide_msg_box
+
+& wait 2000
+& show_bg
+& show_msg_box
+> YN:Are you gonna burn down here too?
+> LEN:no
+> LEN:how the fuck would i burn down a bathroom the fuck
+> LEN:just had to wah my bananhands
+
+& wait 1000
+> LEN:ok tiem to lite this shit up
+> YN:Len.. are you sure you wanna do this..?
+> LEN%action:lights a match and throws it into the gasoline
+> LEN:ye
+> MIKU:not so fast fukboi
+
+& load_scene miku.dx

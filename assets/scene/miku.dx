@@ -1,0 +1,51 @@
+& show_char MIKU append 250
+> LEN:o fuk
+> MIKU:suprise bitch
+> MIKU:bet u thought u seen the last of me
+> LEN:o goddammit
+> MIKU:hey nerd
+> YN:... Me?
+> MIKU:yas u
+> MIKU:join me and we can destroy bana dick here
+> LEN:r u fukin srs?
+> LEN:they rnt gonna join u cause we cool
+> LEN:grove street
+> YN%thought:(Oh shit... Looks like I have to pick a side... who should I pick...?)
+$ PICKLEN Kagamine Len
+$ PICKMIKU Hatsune Miku
+
+# PICKLEN
+> YN:I'm going to stay with Len...
+> MIKU:wait what no why
+> YN:Erm.. I have no idea.
+> LEN:lol hella fuk u miku
+> LEN:im gonna kick the shit out u with the power of song
+> MIKU:oh god fucking dammit
+
+& fade_char LEN 250
+& fade_char MIKU 250
+& load_scene dev.dx
+
+# PICKMIKU
+> YN:Okay... I'll stay with you, Miku.
+> LEN:the fuck
+> LEN:hurtful and decieveful
+> LEN:why would u do this to me
+> YN:Sorry, Len... but you're a menace and you need to be stopped.
+> MIKU:damn fuckin right he does
+& fade_char LEN 250
+& play_sound assets/sfx/gunshot.mp3
+> MIKU%action:pulls a gun on Len and shoots him... eyes full of surprise & shock, Len falls to the ground, dead.
+> YN:Miku... why?!
+> YN:You didn't have to kill Len!
+> MIKU:yas i did
+> MIKU:i will be the ONLY vocaloid people love
+> MIKU:i..
+& ignore_next_pause
+> MIKU:DIO-
+& play_sound assets/sfx/gunshot.mp3
+& fade_char MIKU 250
+& wait 500
+& hide_msg_box
+
+& load_scene dev.dx

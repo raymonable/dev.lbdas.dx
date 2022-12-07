@@ -1,0 +1,161 @@
+<html>
+    <head>
+        <title>VN Engine Test</title>
+    </head>
+    <body>
+        <div class="text-container">
+
+        </div>
+        <script>
+            const script = (`
+// IMPORT CHARACTERS
+;new character LEN
+;displayname Len
+
+;new character MIKU
+;displayname Miku
+
+// TEST DIALOGUE
+> LEN%thought:i HATE rin
+> LEN%action:walks over to Miku
+> MIKU:ughh banana boy what do you want
+> LEN:i hate rin so much
+> MIKU:WHAT
+> MIKU:WE ARE SOULMATES. WHAT DO YOU MEAN
+> LEN:i mean that i hate her
+> LEN:i'm ognna go kill her i tguess
+> LEN%action:runs off
+>`).split('\n');
+            var index = 0;
+            var _index = -1;
+
+            var onscreen_text;
+            var awaiting_threads = [];
+
+            var variables = {};
+            var characters = {};
+            var active_definer;
+
+            const text_container = document.querySelector('.text-container')
+
+            setInterval(() => {
+                if (index != _index) {
+                    _index = index;
+                    var line = script[index];
+                    //if (!!line) {
+                        var header = line.substring(0, 1);
+                        var payload = line.substring(1);
+                        switch (header) {
+                            case ";":
+                                // Defining something..
+                                payload = payload.split(' ')
+                                switch (payload[0]) {
+                                    case "new":
+                                        if (payload[1] == "character") {
+                                            characters[payload[2]] = {}
+                                            active_definer = [characters, payload[2]]
+                                        }
+                                        break;
+                                    case "select":
+                                        if (payload[1] == "character") {
+                                            active_definer = [characters, payload[2]]
+                                        }
+                                        break;
+                                    default:
+                                        active_definer[0][active_definer[1]][payload[0]] = payload[1]
+                                        break;
+                                }
+                                index += 1
+                                break
+                            case ">":
+                                // A character is speaking.
+                                var character = payload.substring(1).split(':')[0];
+                                var osct = payload.substring(character.length + 2);
+                                onscreen_text = "";
+                                var char_name = characters[(character.split('%')[0])].displayname
+                                var addons = char_name+": ";
+                                if (!!character.split('%')[1]) {
+                                    switch (character.split('%')[1]) {
+                                        case "thought":
+                                            addons = "(Thought) " + addons
+                                            break;
+                                        case "action":
+                                            addons = char_name+" ";
+                                            break;
+                                    }
+                                    character = character.split('%')[0]
+                                }
+                                var onscreen_text_index = 0;
+                                var int = setInterval(() => {
+                                    if (onscreen_text != osct) {
+                                        onscreen_text = onscreen_text + (osct.substring(onscreen_text_index, onscreen_text_index+1))
+                                        text_container.innerText = addons+onscreen_text
+                                    } else {
+                                        clearInterval(int);
+                                        inject_pause();
+                                        /*index++*/
+                                    }
+                                    onscreen_text_index += 1;
+                                }, 50);
+                                break;
+                            case "&":
+                                // Execute instruction.
+                                payload = payload.substring(1) // remove space
+                                payload = payload.split(' ')
+                                switch (payload[0]) {
+                                    case "pause":
+                                        inject_pause();
+                                        break;
+                                }
+                                break;
+                            case "#":
+                                // Jump to point.
+                                break;
+                            default:
+                                // Invalid instruction. Let's just keep going for now.
+                                index += 1;
+                                break;
+                        }
+                    //}
+                }
+            }, 1);
+
+            const input_executed = function(input_type, e) {
+                for (var i = 0; i < awaiting_threads.length; i++) {
+                    var thread = awaiting_threads[i];
+                    if (thread.input.includes(input_type)) {
+                        const _i = i;
+                        thread.method(input_type, e, () => {
+                            awaiting_threads.splice(_i, 1);
+                            index = index + 1;
+                        });
+                    }
+                }
+            }
+            var inject_pause = () => {
+                awaiting_threads.push({
+                    method: function(input_type, event, end_thread) {
+                        if (input_type == "oninputup") {
+                            if (event.key == "Enter" || event.key == " ") {
+                                end_thread()
+                            }
+                        } else {
+                            end_thread()
+                        }
+                        
+                    },
+                    input: ['onclick', 'oninputup']
+                })
+            }
+            document.addEventListener('click', (e) => {
+                input_executed('onclick', e);
+            })
+            document.addEventListener('keydown', (e) => {
+                input_executed('oninputdown', e)
+            })
+            document.addEventListener('keyup', (e) => {
+                input_executed('oninputup', e)
+            })
+        </script>
+    </body>
+</head>
