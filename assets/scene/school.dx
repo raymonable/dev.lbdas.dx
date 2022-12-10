@@ -1,7 +1,4 @@
-& show_bg
-
-> YN%thought:(Note, there's no background for the other image of the school exterior.)
-> YN%thought:(This will be fixed before the first release build)
+& show_bg SCHOOL_EXTERIOR
 
 > LEN:ok we start here
 > LEN:fuck this place in particular
@@ -81,7 +78,7 @@ $ WATCH Let's see it!
 & hide_msg_box
 
 & wait 2000
-& show_bg
+& show_bg BATHROOM
 & show_msg_box
 > YN:Are you gonna burn down here too?
 > LEN:no
@@ -89,9 +86,11 @@ $ WATCH Let's see it!
 > LEN:just had to wah my bananhands
 
 & wait 1000
+& show_bg SCHOOL_EXTERIOR
 > LEN:ok tiem to lite this shit up
 > YN:Len.. are you sure you wanna do this..?
 > LEN%action:lights a match and throws it into the gasoline
+& show_bg FIRE
 > LEN:ye
 > MIKU:not so fast fukboi
 

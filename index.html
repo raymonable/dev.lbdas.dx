@@ -1,13 +1,23 @@
 <html>
     <head>
         <title>Len Burns Down A School DX</title>
+        <meta name="viewport" content = "width = device-width, initial-scale = 1.0, minimum-scale = 1, maximum-scale = 1, user-scalable = no">
+        <meta name="apple-mobile-web-app-title" content="LenBurnsDownASchoolDX">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
         <style>
             body {
                 background: black;
+                overflow: hidden;
+            }
+
+            @font-face {
+                font-family: pjsekai;
+                src: url(assets/font/pjsekai.ttf);
             }
 
             * {
-                font-family: Arial;
+                font-family: "pjsekai";
                 user-select: none;
             }
 
@@ -101,15 +111,54 @@
             .buttons button {
                 width: 100%;
                 text-align: center;
-                height: 50px;
-                font-size: 24px;
+                height: 2.5vw;
+                font-size: 1.25vw;
                 border: none;
-                border-radius: 8px;
+                border-radius: 0.45vw;
                 margin-bottom: 10px;
                 background: linear-gradient(180deg, rgba(196,128,128,1) 0%, rgba(158,82,82,1) 100%);
                 color: white;
             }
+            .fullscreen-prompt {
+                width: calc(100% - 50px);
+                height: calc(100% - 50px);
+                position: fixed;
+                top: 0;
+                left: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 5vw;
+                background: black;
+                color: white;
+                z-index: 99;
+                text-align: center;
+                padding: 25px;
+            }
+            
+            .notification {
+                z-index: 99;
+                width: calc(22.5% - 15px);
+                height: calc(4vw - 15px);
+                background: white;
+                padding: 7.5px;
+                transition: 0.25s transform;
+                position: absolute;
+                top: 75%;
+                left: 100%;
+            }
+            .notification-title {
+                width: 100%;
+                height: 35%;
+            }
+            .notification-body {
+                width: 100%;
+                height: calc(100% - 35%);
+                line-height: 1.5vw;
+                font-size: 0.75vw;
+            }
         </style>
+        <link rel="icon" href="assets/icon/favicon.png">
     </head>
     <body>
         <canvas></canvas>
@@ -124,6 +173,19 @@
         <div class="buttons">
 
         </div>
+        <div class="fullscreen-prompt" style="display: none;">
+            Tap to enter fullscreen
+        </div>
+        <div class="notification" style="transform: translate(0)">
+            <div class="notification-title">
+                test
+            </div>
+            <div class="notification-body">
+                test<br>
+                test
+            </div>
+        </div>
+    </body>
         <script>
             const console_msg = `Hello!!
 Please know that viewing the console or looking through files may increase your chance of spoiling the game.
@@ -154,24 +216,32 @@ Don\'t tell anyone, but I plan on doing a rewrite of the game entirely.
             var name_container = document.querySelector('.textbox-name')
             var onscreen_characters = {}
 
+            const notification = document.querySelector('.notification')
             const vn_canvas = document.querySelector('canvas');
             const vn_context = vn_canvas.getContext('2d');
             vn_context.imageSmoothingEnabled = false
 
             var bg
+            var multiplier = 1;
 
+            var delta = new Date().getTime();
             setInterval(() => {
+                var _new = new Date().getTime();
+                multiplier = ((_new - delta) / 1000) / (1/60);
+                delta = _new
                 vn_canvas.width = window.innerWidth;
                 vn_canvas.height = window.innerHeight;
                 // background
                 if (!!bg) {
+                    //vn_context.filter = 'blur(4px)';
                     var width = vn_canvas.width;
                     var height = (vn_canvas.width / bg.width) * bg.height;
                     if (vn_canvas.height > height + 5) {
                         width = (vn_canvas.height / bg.height) * bg.width;
                         height = vn_canvas.height;
                     }
-                    vn_context.drawImage(bg, (vn_canvas.width / 2) - (width / 2), vn_canvas.height - height, width, height)
+                    vn_context.drawImage(bg, (vn_canvas.width / 2) - (width / 2), vn_canvas.height - height, width, height);
+                    //vn_context.filter = 'blur(0px)';
                 }
                 // draw characters
                 Object.keys(characters).forEach((__character) => {
@@ -199,16 +269,17 @@ Don\'t tell anyone, but I plan on doing a rewrite of the game entirely.
                                     break;
                             }
                             ___character = onscreen_characters[__character];
-                            vn_context.globalAlpha = ___character.fade || 1;
+                            vn_context.globalAlpha = ___character.fade != null ? ___character.fade : 1;
                             if (___character.fade != null) {
                                 if (___character.fadeSpeed < 0) {
-                                    ___character.fade -= -((1000 - Math.abs(___character.fadeSpeed)) / 100000);
+                                    console.log((1000 - Math.abs(___character.fadeSpeed)))
+                                    ___character.fade -= -(((1000 - Math.abs(___character.fadeSpeed)) / 10000) * multiplier);
                                     if (___character.fade >= 1) {
                                         // kil them
                                         onscreen_characters[__character].fade = null;
                                     }
                                 } else {
-                                    ___character.fade -= ((1000 - ___character.fadeSpeed) / 100000);
+                                    ___character.fade -= (((___character.fadeSpeed) / 10000) * multiplier);
                                     if (___character.fade <= 0) {
                                         // kil them
                                         delete onscreen_characters[__character]
@@ -220,7 +291,7 @@ Don\'t tell anyone, but I plan on doing a rewrite of the game entirely.
                         }
                     }
                 })
-            });
+            }, (1/60));
 
             document.oncontextmenu = (e) => {
                 e.preventDefault()
@@ -344,9 +415,14 @@ Don\'t tell anyone, but I plan on doing a rewrite of the game entirely.
                                         onscreen_text_index += 1;
                                     }
                                     var onscreen_text_index = 0;
+                                    var delta = new Date().getTime();
                                     var int = setInterval(() => {
-                                        advance()
-                                    }, 35);
+                                        var _new = new Date().getTime();
+                                        if (_new - delta > 25 / multiplier) {
+                                            delta = _new
+                                            advance();
+                                        }
+                                    });
                                     advance();
                                     break;
                                 case "&":
@@ -407,17 +483,23 @@ Don\'t tell anyone, but I plan on doing a rewrite of the game entirely.
                                             var sfx = new Audio(payload[1]);
                                             sfx.oncanplaythrough = () => {
                                                 sfx.play();
-                                                index += 1;
                                             }
+                                            index += 1;
                                             break;
                                         case "game_initted":
                                             start()
                                             break;
                                         case "award_ending":
-                                            alert('no ending system has been added yet so just use this lol')
+                                            /*alert('no ending system has been added yet so just use this lol')
                                             alert('you got the '+payload[1]+' ending!!!')
-                                            alert(endings[payload[1]].ending)
-                                            start()
+                                            alert(endings[payload[1]].ending)*/
+                                            notification.querySelector('.notification-title').innerText = `Got ending "${payload[1]}"`
+                                            notification.querySelector('.notification-body').innerText = `${endings[payload[1]].ending}`
+                                            notification.style = "transform: translate(-100%, 0)"
+                                            setTimeout(() => {
+                                                notification.style = "transform: translate(0)"
+                                                start()
+                                            }, 2500);
                                             break;
                                     }
                                     break;
@@ -490,8 +572,17 @@ Don\'t tell anyone, but I plan on doing a rewrite of the game entirely.
             })
 
             if (window.innerWidth < window.innerHeight) {
-                alert('LBDASDX currently doesn\'t work well on devices in this aspect ratio.')
-                alert('Please rotate your device sideways to enjoy.')
+                document.querySelector('.fullscreen-prompt').style = ""
+                if (!!document.body.requestFullscreen) {
+                    document.querySelector('.fullscreen-prompt').addEventListener('click', () => {
+                        document.body.requestFullscreen();
+                    })
+                    document.addEventListener('fullscreenchange', () => {
+                        document.querySelector('.fullscreen-prompt').style = (!!document.fullscreenElement) ? "display: none;" : ""
+                    })
+                } else {
+                    document.querySelector('.fullscreen-prompt').innerText = "Sorry, but your device doesn't support the web Fullscreen API. Please manually rotate it, and then refresh the page."
+                }
             }
 
             load_scene_url('vars/char.dx')

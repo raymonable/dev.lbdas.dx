@@ -37,7 +37,7 @@
 // YOU
 ;new character YN
 ;displayname You
-;textbox_color #afafaf
+;textbox_color #6f6f7f
 
 // BACKGROUNDS
 ;new background SCHOOL_OUTSIDE
@@ -51,5 +51,14 @@
 
 ;new background LOCKERS
 ;image assets/bg/lockers.png
+
+;new background BATHROOM
+;image assets/bg/bathroom.png
+
+;new background FIRE
+;image assets/bg/fire.png
+
+;new background SCHOOL_EXTERIOR
+;image assets/bg/schoolexterior.png
 
 & load_scene vars/ending.dx

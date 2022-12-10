@@ -5,12 +5,9 @@
 & wait 2000
 
 & show_msg_box
-> RIN:hiya
-> RIN:i just have a little something to tell ya
-> RIN:this game is in development!!
-> RIN:most assets aren't final.
-> RIN:besides that, if you find any bugs, please report it to the discord server.
-> RIN:thank u :3
+> RIN:hello...
+> RIN:this is public dev build number 2!
+> RIN:in the future, this screen will be replaced by a settings screen.
 & ignore_next_pause
 > RIN:now, please enj-
 > LEN:RIN!!!!!!

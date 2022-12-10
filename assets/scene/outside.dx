@@ -2,7 +2,7 @@
 
 & wait 250
 
-& show_char LEN all 250
+& show_char LEN all 500
 & wait 500
 & show_msg_box
 > LEN:hey nerd
