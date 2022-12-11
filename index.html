@@ -210,6 +210,7 @@ Don\'t tell anyone, but I plan on doing a rewrite of the game entirely.
             var active_definer;
             var int;
             var ignore_pause = false;
+            var last_sound;
             
             var textbox = document.querySelector('.textbox')
             var text_container = document.querySelector('span');
@@ -279,7 +280,8 @@ Don\'t tell anyone, but I plan on doing a rewrite of the game entirely.
                                         onscreen_characters[__character].fade = null;
                                     }
                                 } else {
-                                    ___character.fade -= (((___character.fadeSpeed) / 10000) * multiplier);
+                                    console.log((___character.fadeSpeed) / 10000)
+                                    ___character.fade -= (((___character.fadeSpeed) / 1000) * multiplier);
                                     if (___character.fade <= 0) {
                                         // kil them
                                         delete onscreen_characters[__character]
@@ -298,7 +300,7 @@ Don\'t tell anyone, but I plan on doing a rewrite of the game entirely.
             }
 
             function load_scene_url(url) {
-                fetch(`assets/scene/${url}`).then((response) => response.text()).then(load_scene)
+                fetch(`/assets/scene/${url}`).then((response) => response.text()).then(load_scene)
             }
 
             function start() {
@@ -480,10 +482,15 @@ Don\'t tell anyone, but I plan on doing a rewrite of the game entirely.
                                             index += 1
                                             break;
                                         case "play_sound":
+                                            if (!!last_sound) {
+                                                last_sound.pause()
+                                                last_sound = null;
+                                            }
                                             var sfx = new Audio(payload[1]);
                                             sfx.oncanplaythrough = () => {
                                                 sfx.play();
                                             }
+                                            last_sound = sfx
                                             index += 1;
                                             break;
                                         case "game_initted":
@@ -496,9 +503,11 @@ Don\'t tell anyone, but I plan on doing a rewrite of the game entirely.
                                             notification.querySelector('.notification-title').innerText = `Got ending "${payload[1]}"`
                                             notification.querySelector('.notification-body').innerText = `${endings[payload[1]].ending}`
                                             notification.style = "transform: translate(-100%, 0)"
+                                            textbox.classList = 'textbox textbox-close'
                                             setTimeout(() => {
                                                 notification.style = "transform: translate(0)"
                                                 start()
+                                                textbox.classList = 'textbox textbox-open'
                                             }, 2500);
                                             break;
                                     }

@@ -1,36 +1,60 @@
 & show_bg
 & show_char KAITO all 250
 
+& play_sound voice/police/kaito/1.mp3
 > KAITO:so
+& play_sound voice/police/kaito/2.mp3
 > KAITO:why did u do it
+& play_sound voice/police/yn/1.mp3
 > YN:.. Do what?
+& play_sound voice/police/kaito/3.mp3
 > KAITO:WHY DID YOU KILL LEN.
+& play_sound voice/police/yn/2.mp3
 > YN:Oh!
+& play_sound voice/police/yn/3.mp3
 > YN:Oh.
+& play_sound voice/police/yn/4.mp3
 > YN:Erm..
+& play_sound voice/police/yn/5.mp3
 > YN:He was threatening to, well...
+& play_sound voice/police/kaito/4.mp3
 > KAITO: yes...??
+& play_sound voice/police/yn/6.mp3
 > YN%thought:Shit. Should I lie..?
 $ LIE Lie
 $ NOLIE Don't lie.
 
 # LIE
+& play_sound voice/police/yn/7.mp3
 > YN:He was threatening to send a pipebomb to every resident in Japan.
+& play_sound voice/police/yn/8.mp3
 > YN%thought:Shit! That sounds so fake...
+& play_sound voice/police/kaito/5.mp3
 > KAITO:sounds liek him
+& play_sound voice/police/kaito/6.mp3
 > KAITO:whatever go have fun
+& play_sound voice/police/kaito/7.mp3
 > KAITO:you're free
+& play_sound voice/police/yn/9.mp3
 > YN:Thanks.
 & award_ending LIAR
 
 # NOLIE
+& play_sound voice/police/yn/10.mp3
 > YN:He was threatening to burn down the school.
+& play_sound voice/police/kaito/8.mp3
 > KAITO:seriously??
+& play_sound voice/police/kaito/9.mp3
 > KAITO:len wuldnt do that
+& play_sound voice/police/kaito/10.mp3
 > KAITO:dumb fucking liar
-> KAITO:come with me
+& play_sound voice/police/kaito/11.mp3
+> KAITO:youre coming with me
+& play_sound voice/police/yn/11.mp3
 > YN:But.. but I'm telling the truth!!
+& play_sound voice/police/kaito/12.mp3
 > KAITO:you can hear it from the juge
+& play_sound voice/police/yn/12.mp3
 > YN:Goddamnit.
 & fade_char KAITO 750
 > YN%action:follow KAITO into the court room.
